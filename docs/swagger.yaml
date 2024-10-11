@@ -1,0 +1,548 @@
+definitions:
+  models.Collection:
+    properties:
+      _id:
+        type: string
+      description:
+        maxLength: 200
+        minLength: 3
+        type: string
+      name:
+        maxLength: 50
+        minLength: 3
+        type: string
+      userId:
+        type: string
+    required:
+    - description
+    - name
+    type: object
+  models.CollectionResponse:
+    properties:
+      collection:
+        $ref: '#/definitions/models.Collection'
+      message:
+        type: string
+    type: object
+  models.ErrorResponse:
+    properties:
+      error:
+        type: string
+    type: object
+  models.LoginCredentials:
+    properties:
+      email:
+        type: string
+      password:
+        minLength: 6
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  models.MessageResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  models.TokenResponse:
+    properties:
+      message:
+        type: string
+      token:
+        type: string
+    type: object
+  models.UpdateCollection:
+    properties:
+      description:
+        maxLength: 200
+        minLength: 3
+        type: string
+      name:
+        maxLength: 50
+        minLength: 3
+        type: string
+    type: object
+  models.UpdateUser:
+    properties:
+      email:
+        type: string
+      password:
+        minLength: 6
+        type: string
+      username:
+        maxLength: 50
+        minLength: 3
+        type: string
+    type: object
+  models.UpdateWord:
+    properties:
+      collectionId:
+        type: string
+      difficulty:
+        maximum: 5
+        minimum: 1
+        type: integer
+      translation:
+        maxLength: 100
+        minLength: 1
+        type: string
+      word:
+        maxLength: 50
+        minLength: 1
+        type: string
+    type: object
+  models.User:
+    properties:
+      _id:
+        type: string
+      email:
+        type: string
+      password:
+        minLength: 6
+        type: string
+      username:
+        maxLength: 50
+        minLength: 3
+        type: string
+    required:
+    - email
+    - password
+    - username
+    type: object
+  models.UserResponse:
+    properties:
+      message:
+        type: string
+      user:
+        $ref: '#/definitions/models.UserWithoutPassword'
+    type: object
+  models.UserWithoutPassword:
+    properties:
+      _id:
+        type: string
+      email:
+        type: string
+      username:
+        type: string
+    type: object
+  models.Word:
+    properties:
+      _id:
+        type: string
+      collectionId:
+        type: string
+      difficulty:
+        maximum: 5
+        minimum: 1
+        type: integer
+      translation:
+        maxLength: 100
+        minLength: 1
+        type: string
+      word:
+        maxLength: 50
+        minLength: 1
+        type: string
+    required:
+    - difficulty
+    - translation
+    - word
+    type: object
+  models.WordResponse:
+    properties:
+      message:
+        type: string
+      word:
+        $ref: '#/definitions/models.Word'
+    type: object
+info:
+  contact: {}
+paths:
+  /collections:
+    get:
+      description: Get a list of all collections
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of collections
+          schema:
+            items:
+              $ref: '#/definitions/models.Collection'
+            type: array
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Get collections
+      tags:
+      - collections
+    post:
+      consumes:
+      - application/json
+      description: Create a new collection
+      parameters:
+      - description: Collection object
+        in: body
+        name: collection
+        required: true
+        schema:
+          $ref: '#/definitions/models.Collection'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Collection created successfully
+          schema:
+            $ref: '#/definitions/models.CollectionResponse'
+        "400":
+          description: 'Invalid input: Name and description are required'
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Create a collection
+      tags:
+      - collections
+  /collections/{collectionId}/words:
+    get:
+      description: Get a list of all words in a collection
+      parameters:
+      - description: Collection ID
+        in: path
+        name: collectionId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of words
+          schema:
+            items:
+              $ref: '#/definitions/models.Word'
+            type: array
+        "400":
+          description: Invalid collection ID
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Get words by collection
+      tags:
+      - words
+    post:
+      consumes:
+      - application/json
+      description: Create a new word
+      parameters:
+      - description: Collection ID
+        in: path
+        name: collectionId
+        required: true
+        type: string
+      - description: Word object
+        in: body
+        name: word
+        required: true
+        schema:
+          $ref: '#/definitions/models.Word'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Word created successfully
+          schema:
+            $ref: '#/definitions/models.WordResponse'
+        "400":
+          description: 'Invalid input: Word and translation are required'
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "403":
+          description: You are not authorized to add words to this collection
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Create a word
+      tags:
+      - words
+  /collections/{id}:
+    delete:
+      description: Delete a collection by ID
+      parameters:
+      - description: Collection ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Collection deleted successfully
+          schema:
+            $ref: '#/definitions/models.MessageResponse'
+        "400":
+          description: Invalid ID
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "403":
+          description: You are not authorized to delete this collection
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Delete a collection
+      tags:
+      - collections
+    patch:
+      consumes:
+      - application/json
+      description: Update a collection by ID
+      parameters:
+      - description: Collection ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Collection object
+        in: body
+        name: collection
+        required: true
+        schema:
+          $ref: '#/definitions/models.UpdateCollection'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Collection updated successfully
+          schema:
+            $ref: '#/definitions/models.CollectionResponse'
+        "400":
+          description: Invalid ID or request body
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "403":
+          description: You are not authorized to update this collection
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Update a collection
+      tags:
+      - collections
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: Login a user
+      parameters:
+      - description: Login credentials
+        in: body
+        name: login
+        required: true
+        schema:
+          $ref: '#/definitions/models.LoginCredentials'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Token generated successfully
+          schema:
+            $ref: '#/definitions/models.TokenResponse'
+        "400":
+          description: Invalid request body
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "401":
+          description: Invalid email or password
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Failed to generate token
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Login
+      tags:
+      - auth
+  /users:
+    delete:
+      description: Delete a user profile
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User deleted successfully
+          schema:
+            $ref: '#/definitions/models.MessageResponse'
+        "403":
+          description: 'Unauthorized: You are not authorized to delete this user'
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: 'Internal server error: Error deleting user'
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Delete a user
+      tags:
+      - users
+    get:
+      description: Get a list of all users
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of users
+          schema:
+            items:
+              $ref: '#/definitions/models.UserWithoutPassword'
+            type: array
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Get all users
+      tags:
+      - users
+    patch:
+      consumes:
+      - application/json
+      description: Update user information
+      parameters:
+      - description: User object with fields to update
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.UpdateUser'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User updated successfully
+          schema:
+            $ref: '#/definitions/models.UserResponse'
+        "400":
+          description: Invalid request body
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "403":
+          description: 'Unauthorized: You are not authorized to update this user'
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: 'Internal server error: Error updating user'
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Update a user
+      tags:
+      - users
+    post:
+      consumes:
+      - application/json
+      description: Create a new user
+      parameters:
+      - description: User object
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.User'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: User created successfully
+          schema:
+            $ref: '#/definitions/models.UserResponse'
+        "400":
+          description: 'Invalid input: Username, email, and password are required'
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: 'Internal server error: Error hashing password'
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Create a user
+      tags:
+      - users
+  /words/{id}:
+    delete:
+      description: Delete a word by ID
+      parameters:
+      - description: Word ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: Word deleted successfully
+          schema:
+            $ref: '#/definitions/models.MessageResponse'
+        "400":
+          description: Invalid word ID
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "403":
+          description: You are not authorized to delete this word
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Delete a word
+      tags:
+      - words
+    patch:
+      consumes:
+      - application/json
+      description: Update a word by ID
+      parameters:
+      - description: Word ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Word object with fields to update
+        in: body
+        name: word
+        required: true
+        schema:
+          $ref: '#/definitions/models.UpdateWord'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Word updated successfully
+          schema:
+            $ref: '#/definitions/models.WordResponse'
+        "400":
+          description: Invalid word ID or request body
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "403":
+          description: You are not authorized to update this word
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Update a word
+      tags:
+      - words
+swagger: "2.0"

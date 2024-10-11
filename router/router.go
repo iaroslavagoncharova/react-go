@@ -4,9 +4,12 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/iaroslavagoncharova/react-go/handlers"
 	"github.com/iaroslavagoncharova/react-go/middlewares"
+	fiberSwagger "github.com/swaggo/fiber-swagger"
+	_ "github.com/iaroslavagoncharova/react-go/docs"
 )
 
 func SetupRoutes(app *fiber.App, h *handlers.Handlers) {
+	app.Get("/swagger/*", fiberSwagger.WrapHandler)
 	// routes without authentication
 	publicRoutes := app.Group("/api")
 	publicRoutes.Get("/collections", h.GetCollections)
@@ -20,9 +23,12 @@ func SetupRoutes(app *fiber.App, h *handlers.Handlers) {
 	privateRoutes.Post("/collections", h.CreateCollection)
 	privateRoutes.Patch("/collections/:id", h.UpdateCollection)
 	privateRoutes.Delete("/collections/:id", h.DeleteCollection)
-	privateRoutes.Patch("/users", h.UpdateUser)
-	privateRoutes.Delete("/users", h.DeleteUser)
+	privateRoutes.Patch("/users/:id", h.UpdateUser)
+	privateRoutes.Delete("/users/:id", h.DeleteUser)
 	privateRoutes.Post("/collections/:collectionId/words", h.CreateWord)
 	privateRoutes.Patch("/words/:id", h.UpdateWord)
 	privateRoutes.Delete("/words/:id", h.DeleteWord)
+
+	// admin routes
+	// adminRoutes := app.Group("/api", middlewares.AuthMiddleware, middlewares.Authorize("admin"))
 }
