@@ -11,16 +11,13 @@ import (
 
 func AuthMiddleware(c *fiber.Ctx) error {
 	// jwt token from authorization header
-	fmt.Println("AuthMiddleware")
 	authHeader := c.Get("Authorization")
-	fmt.Println(authHeader)
 	if authHeader == "" {
 		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "Missing or invalid token"})
 	}
 
 	tokenString := authHeader[len("Bearer "):]
-	fmt.Println(tokenString)
-
+	
 	// token validation
 	token, err := ValidateJWT(tokenString)
 	if err != nil {

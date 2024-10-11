@@ -8,13 +8,20 @@ import (
 	"github.com/iaroslavagoncharova/react-go/validation"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo/options"
 	"golang.org/x/crypto/bcrypt"
 )
 
 func (h *Handlers) GetUsers(c *fiber.Ctx) error {
 	var users []models.User
 
-	cursor, err := h.UsersCollection.Find(context.Background(), bson.M{})
+	projection := bson.D{
+		{Key: "password", Value: 0},
+	}
+
+	opts := options.Find().SetProjection(projection)
+
+	cursor, err := h.UsersCollection.Find(context.Background(), bson.M{}, opts)
 	if err != nil {
 		return err
 	}

@@ -15,6 +15,7 @@ import (
 type Handlers struct {
 	CollectionsCollection *mongo.Collection
 	UsersCollection       *mongo.Collection
+	WordsCollection       *mongo.Collection
 }
 
 func (h *Handlers) GetCollections(c *fiber.Ctx) error {
