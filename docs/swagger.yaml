@@ -408,26 +408,6 @@ paths:
       tags:
       - auth
   /users:
-    delete:
-      description: Delete a user profile
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: User deleted successfully
-          schema:
-            $ref: '#/definitions/models.MessageResponse'
-        "403":
-          description: 'Unauthorized: You are not authorized to delete this user'
-          schema:
-            $ref: '#/definitions/models.ErrorResponse'
-        "500":
-          description: 'Internal server error: Error deleting user'
-          schema:
-            $ref: '#/definitions/models.ErrorResponse'
-      summary: Delete a user
-      tags:
-      - users
     get:
       description: Get a list of all users
       produces:
@@ -444,39 +424,6 @@ paths:
           schema:
             $ref: '#/definitions/models.ErrorResponse'
       summary: Get all users
-      tags:
-      - users
-    patch:
-      consumes:
-      - application/json
-      description: Update user information
-      parameters:
-      - description: User object with fields to update
-        in: body
-        name: user
-        required: true
-        schema:
-          $ref: '#/definitions/models.UpdateUser'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: User updated successfully
-          schema:
-            $ref: '#/definitions/models.UserResponse'
-        "400":
-          description: Invalid request body
-          schema:
-            $ref: '#/definitions/models.ErrorResponse'
-        "403":
-          description: 'Unauthorized: You are not authorized to update this user'
-          schema:
-            $ref: '#/definitions/models.ErrorResponse'
-        "500":
-          description: 'Internal server error: Error updating user'
-          schema:
-            $ref: '#/definitions/models.ErrorResponse'
-      summary: Update a user
       tags:
       - users
     post:
@@ -509,6 +456,32 @@ paths:
       tags:
       - users
   /users/{id}:
+    delete:
+      description: Delete a user profile
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User deleted successfully
+          schema:
+            $ref: '#/definitions/models.MessageResponse'
+        "403":
+          description: 'Unauthorized: You are not authorized to delete this user'
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: 'Internal server error: Error deleting user'
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Delete a user
+      tags:
+      - users
     get:
       description: Get a user by ID
       parameters:
@@ -533,6 +506,44 @@ paths:
           schema:
             $ref: '#/definitions/models.ErrorResponse'
       summary: Get user by ID
+      tags:
+      - users
+    patch:
+      consumes:
+      - application/json
+      description: Update user information
+      parameters:
+      - description: User object with fields to update
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.UpdateUser'
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User updated successfully
+          schema:
+            $ref: '#/definitions/models.UserResponse'
+        "400":
+          description: Invalid request body
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "403":
+          description: 'Unauthorized: You are not authorized to update this user'
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: 'Internal server error: Error updating user'
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Update a user
       tags:
       - users
   /words/{id}:

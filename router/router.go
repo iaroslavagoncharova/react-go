@@ -11,6 +11,10 @@ import (
 func SetupRoutes(app *fiber.App, h *handlers.Handlers) {
 	app.Get("/swagger/*", fiberSwagger.WrapHandler)
 	// routes without authentication
+	// show that api is working
+	app.Get("/", func(c *fiber.Ctx) error {
+		return c.SendString("Welcome to the language learning API!")
+	})
 	publicRoutes := app.Group("/api")
 	publicRoutes.Get("/collections", h.GetCollections)
 	publicRoutes.Get("/collections/:id", h.GetCollectionById)

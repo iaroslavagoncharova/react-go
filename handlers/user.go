@@ -137,11 +137,12 @@ func (h *Handlers) CreateUser(c *fiber.Ctx) error {
 // @Accept json
 // @Produce json
 // @Param user body models.UpdateUser true "User object with fields to update"
+// @Param id path string true "User ID"
 // @Success 200 {object} models.UserResponse "User updated successfully"
 // @Failure 400 {object} models.ErrorResponse "Invalid request body"
 // @Failure 403 {object} models.ErrorResponse "Unauthorized: You are not authorized to update this user"
 // @Failure 500 {object} models.ErrorResponse "Internal server error: Error updating user"
-// @Router /users [patch]
+// @Router /users/{id} [patch]
 func (h *Handlers) UpdateUser(c *fiber.Ctx) error {
 	var updateUser models.UpdateUser
 	role := c.Locals("role").(string)
@@ -217,10 +218,11 @@ func (h *Handlers) UpdateUser(c *fiber.Ctx) error {
 // @Description Delete a user profile
 // @Tags users
 // @Produce json
+// @Param id path string true "User ID"
 // @Success 200 {object} models.MessageResponse "User deleted successfully"
 // @Failure 403 {object} models.ErrorResponse "Unauthorized: You are not authorized to delete this user"
 // @Failure 500 {object} models.ErrorResponse "Internal server error: Error deleting user"
-// @Router /users [delete]
+// @Router /users/{id} [delete]
 func (h *Handlers) DeleteUser(c *fiber.Ctx) error {
 	// user id from params
 	id := c.Params("id")
