@@ -7,25 +7,21 @@ import (
 )
 
 func SetupRoutes(app *fiber.App, h *handlers.Handlers) {
-	// collections routes
-	app.Get("/api/collections", h.GetCollections)
-	app.Post("/api/login", h.Login)
-	
-	app.Use(middlewares.AuthMiddleware)
+	// routes without authentication
+	publicRoutes := app.Group("/api")
+	publicRoutes.Get("/collections", h.GetCollections)
+	publicRoutes.Post("/login", h.Login)
+	publicRoutes.Get("/users", h.GetUsers)
+	publicRoutes.Post("/users", h.CreateUser)
+	// publicRoutes.Get("/collections/:collectionId/words", h.GetWordsByCollection)
 
-	app.Post("/api/collections", middlewares.AuthMiddleware, h.CreateCollection)
-	app.Patch("/api/collections/:id", middlewares.AuthMiddleware, h.UpdateCollection)
-	app.Delete("/api/collections/:id", middlewares.AuthMiddleware, h.DeleteCollection)
-
-	// // words routes
-	// app.Get("/api/collections/:collectionId/words", getWordsByCollection)
-	// app.Post("/api/collections/:collectionId/words", AuthMiddleware, createWord)
-	// app.Patch("/api/words/:id", AuthMiddleware, updateWord)
-	// app.Delete("/api/words/:id", AuthMiddleware, deleteWord)
-
-	// // users routes
-	// app.Get("/api/users", getUsers)
-	// app.Post("/api/users", createUser)
-	// app.Patch("/api/users/:id", AuthMiddleware, updateUser)
-	// app.Delete("/api/users/:id", AuthMiddleware, deleteUser)
+	privateRoutes := app.Group("/api", middlewares.AuthMiddleware)
+	privateRoutes.Post("/collections", h.CreateCollection)
+	privateRoutes.Patch("/collections/:id", h.UpdateCollection)
+	privateRoutes.Delete("/collections/:id", h.DeleteCollection)
+	privateRoutes.Patch("/users", h.UpdateUser)
+	privateRoutes.Delete("/users", h.DeleteUser)
+	// privateRoutes.Post("/collections/:collectionId/words", h.CreateWord)
+	// privateRoutes.Patch("/words/:id", h.UpdateWord)
+	// privateRoutes.Delete("/words/:id", h.DeleteWord)
 }
