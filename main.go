@@ -7,12 +7,12 @@ import (
 	"os"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/joho/godotenv"
+	"github.com/iaroslavagoncharova/react-go/config"
 	"github.com/iaroslavagoncharova/react-go/handlers"
 	"github.com/iaroslavagoncharova/react-go/router"
+	"github.com/joho/godotenv"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	"github.com/iaroslavagoncharova/react-go/config"
 )
 
 var collectionsCollection *mongo.Collection
@@ -62,9 +62,5 @@ func main() {
 	// Setup routes
 	router.SetupRoutes(app, handler)
 
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "5000"
-	}
-	log.Fatal(app.Listen(":" + port))
+	app.Listen("0.0.0.0:8080")
 }
