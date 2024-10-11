@@ -44,6 +44,30 @@ func (h *Handlers) GetCollections(c *fiber.Ctx) error {
 	return c.JSON(collections)
 }
 
+// @Summary Get collection by ID
+// @Description Get a collection by ID
+// @Tags collections
+// @Produce json
+// @Param id path string true "Collection ID"
+// @Success 200 {object} models.Collection "Collection object"
+// @Failure 400 {object} models.ErrorResponse "Invalid collection ID"
+// @Failure 500 {object} models.ErrorResponse "Internal server error"
+// @Router /collections/{id} [get]
+func (h *Handlers) GetCollectionById(c *fiber.Ctx) error {
+	id := c.Params("id")
+	objectID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return c.Status(400).JSON(models.ErrorResponse{Error: "Invalid collection ID"})
+	}
+
+	var col models.Collection
+	err = h.CollectionsCollection.FindOne(context.Background(), bson.M{"_id": objectID}).Decode(&col)
+	if err != nil {
+		return c.Status(500).JSON(models.ErrorResponse{Error: "Internal server error"})
+	}
+	return c.JSON(col)
+}
+
 // @Summary Create a collection
 // @Description Create a new collection
 // @Tags collections

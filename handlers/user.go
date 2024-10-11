@@ -47,6 +47,36 @@ func (h *Handlers) GetUsers(c *fiber.Ctx) error {
 	return c.JSON(usersWithoutPassword)
 }
 
+// @Summary Get user by ID
+// @Description Get a user by ID
+// @Tags users
+// @Produce json
+// @Param id path string true "User ID"
+// @Success 200 {object} models.UserWithoutPassword "User object"
+// @Failure 400 {object} models.ErrorResponse "Invalid ID"
+// @Failure 500 {object} models.ErrorResponse "Internal server error"
+// @Router /users/{id} [get]
+func (h *Handlers) GetUserById(c *fiber.Ctx) error {
+	id := c.Params("id")
+	objectID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return c.Status(400).JSON(models.ErrorResponse{Error: "Invalid ID"})
+	}
+
+	var user models.User
+	err = h.UsersCollection.FindOne(context.Background(), bson.M{"_id": objectID}).Decode(&user)
+	if err != nil {
+		return c.Status(500).JSON(models.ErrorResponse{Error: "Internal server error"})
+	}
+
+	return c.JSON(models.UserWithoutPassword{
+		ID:       user.ID,
+		Username: user.Username,
+		Email:    user.Email,
+		Role:     user.Role,
+	})
+}
+
 // @Summary Create a user
 // @Description Create a new user
 // @Tags users
@@ -211,7 +241,7 @@ func (h *Handlers) DeleteUser(c *fiber.Ctx) error {
 			return c.Status(403).JSON(models.ErrorResponse{Error: "You are not authorized to delete this user"})
 		}
 	}
-	
+
 	filter := bson.M{"_id": objectID}
 	_, err = h.UsersCollection.DeleteOne(context.Background(), filter)
 	if err != nil {

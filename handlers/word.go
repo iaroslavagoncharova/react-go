@@ -44,6 +44,31 @@ func (h *Handlers) GetWordsByCollection(c *fiber.Ctx) error {
 	return c.JSON(words)
 }
 
+// @Summary Get word by ID
+// @Description Get a word by ID
+// @Tags words
+// @Produce json
+// @Param id path string true "Word ID"
+// @Success 200 {object} models.Word "Word object"
+// @Failure 400 {object} models.ErrorResponse "Invalid word ID"
+// @Failure 500 {object} models.ErrorResponse "Internal server error"
+// @Router /words/{id} [get]
+func (h *Handlers) GetWordById(c *fiber.Ctx) error {
+	id := c.Params("id")
+	objectID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return c.Status(400).JSON(models.ErrorResponse{Error: "Invalid word ID"})
+	}
+
+	var word models.Word
+	filter := bson.M{"_id": objectID}
+	err = h.WordsCollection.FindOne(context.Background(), filter).Decode(&word)
+	if err != nil {
+		return c.Status(500).JSON(models.ErrorResponse{Error: "Internal server error"})
+	}
+	return c.JSON(word)
+}
+
 // @Summary Create a word
 // @Description Create a new word
 // @Tags words

@@ -13,10 +13,13 @@ func SetupRoutes(app *fiber.App, h *handlers.Handlers) {
 	// routes without authentication
 	publicRoutes := app.Group("/api")
 	publicRoutes.Get("/collections", h.GetCollections)
+	publicRoutes.Get("/collections/:id", h.GetCollectionById)
 	publicRoutes.Post("/login", h.Login)
 	publicRoutes.Get("/users", h.GetUsers)
+	publicRoutes.Get("/users/:id", h.GetUserById)
 	publicRoutes.Post("/users", h.CreateUser)
 	publicRoutes.Get("/collections/:collectionId/words", h.GetWordsByCollection)
+	publicRoutes.Get("/words/:id", h.GetWordById)
 
 	// routes with authentication
 	privateRoutes := app.Group("/api", middlewares.AuthMiddleware)
