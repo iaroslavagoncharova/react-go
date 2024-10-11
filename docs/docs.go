@@ -190,6 +190,45 @@ const docTemplate = `{
             }
         },
         "/collections/{id}": {
+            "get": {
+                "description": "Get a collection by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "collections"
+                ],
+                "summary": "Get collection by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Collection ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Collection object",
+                        "schema": {
+                            "$ref": "#/definitions/models.Collection"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid collection ID",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponse"
+                        }
+                    }
+                }
+            },
             "delete": {
                 "description": "Delete a collection by ID",
                 "produces": [
@@ -498,7 +537,87 @@ const docTemplate = `{
                 }
             }
         },
+        "/users/{id}": {
+            "get": {
+                "description": "Get a user by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Get user by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User object",
+                        "schema": {
+                            "$ref": "#/definitions/models.UserWithoutPassword"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid ID",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/words/{id}": {
+            "get": {
+                "description": "Get a word by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "words"
+                ],
+                "summary": "Get word by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Word ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Word object",
+                        "schema": {
+                            "$ref": "#/definitions/models.Word"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid word ID",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponse"
+                        }
+                    }
+                }
+            },
             "delete": {
                 "description": "Delete a word by ID",
                 "tags": [
@@ -753,6 +872,9 @@ const docTemplate = `{
                     "type": "string",
                     "minLength": 6
                 },
+                "role": {
+                    "type": "string"
+                },
                 "username": {
                     "type": "string",
                     "maxLength": 50,
@@ -778,6 +900,9 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "email": {
+                    "type": "string"
+                },
+                "role": {
                     "type": "string"
                 },
                 "username": {

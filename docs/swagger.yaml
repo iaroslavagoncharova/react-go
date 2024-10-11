@@ -101,6 +101,8 @@ definitions:
       password:
         minLength: 6
         type: string
+      role:
+        type: string
       username:
         maxLength: 50
         minLength: 3
@@ -122,6 +124,8 @@ definitions:
       _id:
         type: string
       email:
+        type: string
+      role:
         type: string
       username:
         type: string
@@ -305,6 +309,32 @@ paths:
       summary: Delete a collection
       tags:
       - collections
+    get:
+      description: Get a collection by ID
+      parameters:
+      - description: Collection ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Collection object
+          schema:
+            $ref: '#/definitions/models.Collection'
+        "400":
+          description: Invalid collection ID
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Get collection by ID
+      tags:
+      - collections
     patch:
       consumes:
       - application/json
@@ -478,6 +508,33 @@ paths:
       summary: Create a user
       tags:
       - users
+  /users/{id}:
+    get:
+      description: Get a user by ID
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User object
+          schema:
+            $ref: '#/definitions/models.UserWithoutPassword'
+        "400":
+          description: Invalid ID
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Get user by ID
+      tags:
+      - users
   /words/{id}:
     delete:
       description: Delete a word by ID
@@ -505,6 +562,32 @@ paths:
           schema:
             $ref: '#/definitions/models.ErrorResponse'
       summary: Delete a word
+      tags:
+      - words
+    get:
+      description: Get a word by ID
+      parameters:
+      - description: Word ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Word object
+          schema:
+            $ref: '#/definitions/models.Word'
+        "400":
+          description: Invalid word ID
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Get word by ID
       tags:
       - words
     patch:
