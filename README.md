@@ -1,9 +1,10 @@
 # Language learning API with Go
-## Technologies Used
-- Go
-- MongoDB
-- Docker
-- Swagger
+
+## Technologies used  
+- **Go**: Backend development  
+- **MongoDB**: NoSQL database  
+- **Docker**: Containerization for easy deployment  
+- **Swagger/OpenAPI**: API documentation 
 
 ## Features
 - **CRUD Operations**: Create, Read, Update, and Delete functionalities for users, collections, and words.
@@ -11,7 +12,10 @@
 - **Authorization**: Role-based access control to restrict certain actions.
 - **Validation**: Input validation to ensure data integrity.
 
-## API Endpoints
+## API documentation  
+You can access the API documentation through [Swagger](http://10.120.33.51:8080/swagger/index.html).
+
+## API endpoints
 | Method | URL                                   | Description                    |
 |--------|---------------------------------------|--------------------------------|
 | GET    | `/api/users`                          | Retrieve all users             |
@@ -30,3 +34,38 @@
 | PATCH  | `/api/words/{id}`                     | Update an existing word        |
 | DELETE | `/api/words/{id}`                     | Delete a word                  |
 
+## Deployment
+The API has been deployed to a RockyLinux virtual machine using Docker. Below is a summary of the deployment process:
+
+1. Built a Docker image:
+
+``` bash
+docker build -t my_app_image .
+```
+2. Ran the Docker container:
+
+``` bash
+sudo docker run -d --restart unless-stopped -p 8080:8080 --name my_app_container my_app_image
+```
+
+3. Access the deployed API:
+Open the deployed [link](http://10.120.33.51:8080/) in a browser or use Postman.
+
+## Authentication
+The API uses JWT for user authentication.
+After logging in, you’ll receive a token, which must be passed in the Authorization header for protected routes.
+```bash
+Authorization: Bearer <your-token>
+```
+
+## List of Go Packages Used
+Here’s a list of key Go packages used in this project:
+
+- github.com/gofiber/fiber/v2: Web framework for building APIs.
+- go.mongodb.org/mongo-driver: MongoDB driver for Go.
+- github.com/golang-jwt/jwt/v5: JWT for authentication.
+- golang.org/x/crypto/bcrypt: Hashing for user passwords.
+- github.com/swaggo/swag: Swagger documentation generator.
+
+## Testing the API with Postman
+A Postman collection with sample API requests has been provided in OMA. You can import it into Postman to quickly test the API.
