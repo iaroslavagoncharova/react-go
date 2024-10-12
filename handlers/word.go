@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/iaroslavagoncharova/react-go/models"
@@ -169,6 +170,8 @@ func (h *Handlers) UpdateWord(c *fiber.Ctx) error {
 		return c.Status(400).JSON(models.ErrorResponse{Error: "No fields to update"})
 	}
 
+	fmt.Println(update)
+
 	// use userId from the token
 	userId := c.Locals("user_id").(string)
 
@@ -196,7 +199,7 @@ func (h *Handlers) UpdateWord(c *fiber.Ctx) error {
 	}
 	return c.Status(200).JSON(models.WordResponse{
 		Message: "Word updated successfully",
-		Word:    models.Word{ID: objectID, CollectionID: wordObj.CollectionID, Word: *updateWord.Word, Translation: *updateWord.Translation, Difficulty: *updateWord.Difficulty},
+		Word:    wordObj,
 	})
 }
 
