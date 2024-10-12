@@ -86,7 +86,7 @@ func (h *Handlers) CreateCollection(c *fiber.Ctx) error {
 	}
 
 	// use userId from the token
-	userId := c.Locals("user").(string)
+	userId := c.Locals("user_id").(string)
 	col.UserID = userId
 
 	fmt.Println(col)
@@ -152,7 +152,7 @@ func (h *Handlers) UpdateCollection(c *fiber.Ctx) error {
 	}
 
 	// use userId from the token
-	userId := c.Locals("user").(string)
+	userId := c.Locals("user_id").(string)
 
 	// check if the collection belongs to the user
 	var collection models.Collection
@@ -193,7 +193,7 @@ func (h *Handlers) DeleteCollection(c *fiber.Ctx) error {
 	}
 
 	// use userId from the token
-	userId := c.Locals("user").(string)
+	userId := c.Locals("user_id").(string)
 
 	// check if the collection belongs to the user
 	var col models.Collection

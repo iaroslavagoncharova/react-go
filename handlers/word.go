@@ -99,7 +99,7 @@ func (h *Handlers) CreateWord(c *fiber.Ctx) error {
 	}
 
 	// use userId from the token
-	userId := c.Locals("user").(string)
+	userId := c.Locals("user_id").(string)
 
 	// check if the collection belongs to the user
 	var col models.Collection
@@ -170,7 +170,7 @@ func (h *Handlers) UpdateWord(c *fiber.Ctx) error {
 	}
 
 	// use userId from the token
-	userId := c.Locals("user").(string)
+	userId := c.Locals("user_id").(string)
 
 	// check if the collection belongs to the user
 	var wordObj models.Word
@@ -217,7 +217,7 @@ func (h *Handlers) DeleteWord(c *fiber.Ctx) error {
 	}
 
 	// use userId from the token
-	userId := c.Locals("user").(string)
+	userId := c.Locals("user_id").(string)
 
 	// check if the collection belongs to the user
 	var word models.Word
