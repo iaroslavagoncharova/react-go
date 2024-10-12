@@ -1,15 +1,19 @@
 # Language learning API with Go
-## Technologies Used
-- Go
-- MongoDB
-- Docker
-- Swagger
+
+## Technologies Used  
+- **Go**: Backend development  
+- **MongoDB**: NoSQL database  
+- **Docker**: Containerization for easy deployment  
+- **Swagger/OpenAPI**: API documentation 
 
 ## Features
 - **CRUD Operations**: Create, Read, Update, and Delete functionalities for users, collections, and words.
 - **Authentication**: Token-based authentication for user access.
 - **Authorization**: Role-based access control to restrict certain actions.
 - **Validation**: Input validation to ensure data integrity.
+
+## API Documentation  
+You can access the API documentation through [Swagger](http://10.120.33.51:8080/swagger/index.html).
 
 ## API Endpoints
 | Method | URL                                   | Description                    |
